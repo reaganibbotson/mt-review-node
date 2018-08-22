@@ -1,14 +1,47 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 const cors = require('cors');
+const knex = require('knex');
+
+const db = knex({
+  client: 'pg',
+  connection: {
+    host : '127.0.0.1',
+    user : 'ribbotson',
+    password : '',
+    database : 'mt-review'
+  }
+});
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get('/signup',(req, res)=>{
-	
+app.post('/signup',(req, res)=>{
+	const { email, name, password } = req.body;
+	const hash = bcrypt.hashSync(password, 10);
+
+})
+
+app.post('/login', (req, res)=>{
+	const { email, password } = req.body;
+	db.select('email', 'hash').from('login')
+	.where('email', '=',email)
+	.then(data =>{
+		const validPassword = bcrypt.compareSync(password, data[0].hash);
+		if(validPassword){
+			return db.select('*').from('users').where('email','=', email)
+			.then(user=>{
+				res.json(user[0]);
+			})
+			.catch(err=> res.status(400).json('Not a valid user'))
+		} else {
+			res.status(400).json('Invalid credentials')
+		}
+	})
+	.catch(err=> res.status(400).json('Invalid credentials'))
 })
 
 app.listen(3000, ()=>{
