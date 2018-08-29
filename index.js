@@ -20,9 +20,30 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/signup',(req, res)=>{
-	const { email, name, password } = req.body;
+	const { email, fullName, password } = req.body;
 	const hash = bcrypt.hashSync(password, 10);
-
+	db.transaction((trx)=>{
+		db.insert({
+			email: email, 
+			password:hash
+		})
+		.into('login')
+		.returning('email')
+		.then((loginEmail)=>{
+			return trx('users')
+				.returning('*')
+				.insert({
+					email: loginEmail[0],
+					name: fullName
+				})
+				.then(user=>{
+					res.json(user[0]);
+				})
+		})
+		.then(trx.commit)
+		.catch(trx.rollback)
+	})
+	.catch(err=> res.status(400).json('Unable to register dickwit'))
 })
 
 app.post('/login', (req, res)=>{
