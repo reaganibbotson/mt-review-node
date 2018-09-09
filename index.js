@@ -8,9 +8,9 @@ const db = knex({
   client: 'pg',
   connection: {
     host : '127.0.0.1',
-    user : 'ribbotson',
-    password : '',
-    database : 'mt-review'
+    user : 'postgres',
+    password : 'Slinki124',
+    database : 'postgres'
   }
 });
 
@@ -22,38 +22,25 @@ app.use(bodyParser.json());
 app.post('/signup',(req, res)=>{
 	const { email, fullName, password } = req.body;
 	const hash = bcrypt.hashSync(password, 10);
-	db.transaction((trx)=>{
-		db.insert({
-			email: email, 
-			password:hash
-		})
-		.into('login')
-		.returning('email')
-		.then((loginEmail)=>{
-			return trx('users')
-				.returning('*')
-				.insert({
-					email: loginEmail[0],
-					name: fullName
-				})
-				.then(user=>{
-					res.json(user[0]);
-				})
-		})
-		.then(trx.commit)
-		.catch(trx.rollback)
+	db.insert({
+		email:email,
+		full_name: fullName,
+		hash:hash
 	})
-	.catch(err=> res.status(400).json('Unable to register dickwit'))
+	.into('users')
+	.returning('full_name')
+	.then(user=> res.status(400).json(user[0]))
+	.catch(err=> res.status(400).json('Unable to signup, dickwit'))
 })
 
 app.post('/login', (req, res)=>{
 	const { email, password } = req.body;
-	db.select('email', 'hash').from('login')
+	db.select('email', 'hash').from('users')
 	.where('email', '=',email)
 	.then(data =>{
 		const validPassword = bcrypt.compareSync(password, data[0].hash);
 		if(validPassword){
-			return db.select('*').from('users').where('email','=', email)
+			return db.select('email', 'full_name', 'user_id').from('users').where('email','=', email)
 			.then(user=>{
 				res.json(user[0]);
 			})
@@ -67,4 +54,6 @@ app.post('/login', (req, res)=>{
 
 app.listen(3000, ()=>{
 	console.log("shitfuckball");
+	db.select('*').from('users')
+		.then(data=> console.log)
 });
