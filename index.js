@@ -19,7 +19,13 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-
+app.get('/home', (req, res)=>{
+	db('resorts').distinct('region').select()
+	.then(data=>{
+		res.status(200).send(data);
+	})
+	.catch(err=>res.status(400).send('There was an error getting regions.' + err))
+})
 
 app.post('/signup',(req, res)=>{
 	const { email, fullName, password } = req.body;
