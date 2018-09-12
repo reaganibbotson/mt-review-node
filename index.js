@@ -122,6 +122,6 @@ app.post('/see-review', (req, res)=>{
 	.catch(err=> res.status(400).json('Unable to retrieve reviews'));
 })
 
-app.listen(3000, ()=>{
+app.listen(process.env.PORT || 3000, ()=>{
 	console.log("shitfuckball");
 });
