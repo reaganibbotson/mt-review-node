@@ -40,6 +40,7 @@ app.get('/resorts:region', (req, res)=>{
 app.get('/resort:resort_id', (req, res)=>{
 	const { resort_id } = req.params;
 	db.select('resort_id', '')
+})
 
 app.post('/signup',(req, res)=>{
 	const { email, fullName, password } = req.body;
