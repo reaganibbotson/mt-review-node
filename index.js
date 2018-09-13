@@ -18,7 +18,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/regions', (req, res)=>{
-	db('resorts').distinct('region').select()
+	db.select(db.raw('select distinct region'))
+	.from('resorts')
 	.then(data=>{
 		res.status(200).json(data[0]);
 		console.log(data[0]);
