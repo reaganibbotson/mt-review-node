@@ -31,7 +31,6 @@ app.get('/resorts/:region', (req, res)=>{
 	const { region } = req.params;
 	db.select('resort_id', 'resort')
 		.from('resorts')
-		.where('region','=',region)
 	.then(data=>{
 		res.status(200).json(data);
 	})
