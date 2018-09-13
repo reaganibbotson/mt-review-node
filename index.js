@@ -21,8 +21,8 @@ app.get('/regions', (req, res)=>{
 	db.select(db.raw('distinct region'))
 	.from('resorts')
 	.then(data=>{
-		res.status(200).json(data[0]);
-		console.log(data[0]);
+		res.status(200).json(data);
+		console.log(data);
 	})
 	.catch(err=> res.status(400).json('Couldn\'t load regions. Error:' + err));
 })
