@@ -85,7 +85,7 @@ app.post('/login', (req, res)=>{
 app.put('/leave-review', (req, res)=>{
 	const { userID, resortID, overallRating, powderRating, crowdRating, villageRating, priceRating } = req.body;
 	if(!userID){
-		res.status(400).json('Must be signed in to leave review'.);
+		res.status(400).json('Must be signed in to leave review');
 	}else{
 		db.insert({
 			user_id: userID,
@@ -120,6 +120,6 @@ app.post('/see-review', (req, res)=>{
 	.catch(err=> res.status(400).json('Unable to retrieve reviews'));
 })
 
-app.listen(process.env.PORT || 3000, ()=>{
+app.listen(`http://reaganibbotson.github.io/mt-review/${process.env.PORT}` || 3000, ()=>{
 	console.log("shitfuckball");
-});
+})
