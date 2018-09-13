@@ -34,6 +34,7 @@ app.get('/resorts/:region', (req, res)=>{
 		.where('region','=',region)
 	.then(data=>{
 		res.status(200).json(data);
+		console.log(data);
 	})
 	.catch(err=>res.status(400).json('Unable to retrieve resort list' + err));
 })
