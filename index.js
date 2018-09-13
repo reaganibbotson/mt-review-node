@@ -49,7 +49,7 @@ app.post('/signup',(req, res)=>{
 		const hash = bcrypt.hashSync(password, 10);
 		db.insert({
 			email:email,
-			full_name: fullName,
+			username: username,
 			hash:hash
 		})
 		.into('users')
