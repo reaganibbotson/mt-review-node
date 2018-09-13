@@ -7,7 +7,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "web": "node index.js",
+    "nodemon":"nodemon index.js"
   },
   "author": "Reagan Ibbotson",
   "license": "ISC",
