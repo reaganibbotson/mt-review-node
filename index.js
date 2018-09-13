@@ -42,6 +42,7 @@ app.get('/resorts:region', (req, res)=>{
 app.get('/resort:resort_id', (req, res)=>{
 	const { resort_id } = req.params;
 	db.select('resort_id', '')
+})
 
 app.post('/signup',(req, res)=>{
 	const { email, fullName, password } = req.body;
@@ -87,7 +88,7 @@ app.post('/login', (req, res)=>{
 app.put('/leave-review', (req, res)=>{
 	const { userID, resortID, overallRating, powderRating, crowdRating, villageRating, priceRating } = req.body;
 	if(!userID){
-		res.status(400).json('Must be signed in to leave review'.);
+		res.status(400).json('Must be signed in to leave review');
 	}else{
 		db.insert({
 			user_id: userID,
