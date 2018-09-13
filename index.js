@@ -27,7 +27,7 @@ app.get('/regions', (req, res)=>{
 	.catch(err=> res.status(400).json('Couldn\'t load regions. Error:' + err));
 })
 
-app.get('/resorts:region', (req, res)=>{
+app.get('/resorts/:region', (req, res)=>{
 	const { region } = req.params;
 	db.select('resort_id', 'resort')
 		.from('resorts')
