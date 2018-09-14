@@ -38,8 +38,8 @@ app.get('/resorts:region', (req, res)=>{
 	.catch(err=>res.status(400).json('Unable to retrieve resort list' + err));
 })
 
-app.get('/resort:resort_id', (req, res)=>{
-	const { resort_id } = req.params;
+app.post('/resort:resort_id', (req, res)=>{
+	const { resort_id } = req.body;
 	db.select('resort_id', '')
 })
 
