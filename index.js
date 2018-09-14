@@ -70,7 +70,7 @@ app.post('/signup',(req, res)=>{
 			'hash':hash
 		})
 		.into('users')
-		.returning('full_name')
+		.returning('*')
 		.then(user=> res.status(400).json(user[0]))
 		.catch(err=> res.status(400).json('Unable to signup, dickwit'))
 	}
