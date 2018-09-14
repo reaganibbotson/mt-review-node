@@ -71,7 +71,7 @@ app.post('/signup',(req, res)=>{
 		})
 		.into('users')
 		.returning('*')
-		.then(user=> res.status(400).json(user[0]))
+		.then(user=> res.status(200).json(user[0]))
 		.catch(err=> res.status(400).json('Unable to signup, dickwit'))
 	}
 })
