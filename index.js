@@ -10,6 +10,14 @@ const db = knex({
     connectionString: process.env.DATABASE_URL,
     ssl: true,
   }
+  	// connection: {
+  	// 	host: 'ec2-54-83-29-34.compute-1.amazonaws.com',
+  	// 	database: 'd75fsn04uibvce',
+  	// 	user:'yfgudxsuxjwxdm',
+  	// 	password:'3958146339deb45eaa7f4ba8a74983fd5a5d1ad2ee063b64c629546cc539dc1c',
+  	// 	ssl: true,
+  	// 	port: 5432
+  	// }
 });
 
 const app = express();
@@ -27,13 +35,15 @@ app.get('/regions', (req, res)=>{
 	.catch(err=> res.status(400).json('Couldn\'t load regions. Error:' + err));
 })
 
-app.get('/resorts:region', (req, res)=>{
+app.get('/resorts/:region', (req, res)=>{
 	const { region } = req.params;
-	db.select('resort_id', 'resort')
+	console.log(region);
+	db.select('resort_id', 'resort_name')
 		.from('resorts')
 		.where('region','=',region)
 	.then(data=>{
 		res.status(200).json(data);
+		console.log(data);
 	})
 	.catch(err=>res.status(400).json('Unable to retrieve resort list' + err));
 })
@@ -123,5 +133,5 @@ app.post('/see-review', (req, res)=>{
 })
 
 app.listen(process.env.PORT || 3000, ()=>{
-	console.log("shitfuckball");
+	console.log(`shitfuckball listening on ${process.env.PORT || 3000}`);
 });
