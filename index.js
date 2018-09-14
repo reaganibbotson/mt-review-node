@@ -59,8 +59,8 @@ app.get('/resort/:resort_name', (req, res)=>{
 })
 
 app.post('/signup',(req, res)=>{
-	const { email, fullName, password } = req.body;
-	if(!email || !fullName || !password){
+	const { email, username, password } = req.body;
+	if(!email || !username || !password){
 		res.status(400).json('Incorrect form data');
 	}else{
 		const hash = bcrypt.hashSync(password, 10);
