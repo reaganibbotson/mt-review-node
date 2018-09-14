@@ -48,9 +48,13 @@ app.get('/resorts/:region', (req, res)=>{
 	.catch(err=>res.status(400).json('Unable to retrieve resort list' + err));
 })
 
-app.post('/resort:resort_id', (req, res)=>{
-	const { resort_id } = req.body;
-	db.select('resort_id', '')
+app.post('/resort/:resort_name', (req, res)=>{
+	const { resort_name } = req.body;
+	db.select('*')
+	.from('resorts')
+	.where('resort_name','=', resort_name)
+	.then(data=>res.status(200).json(data[0]))
+	.catch(err=>res.status(400).json(`Unable to retrieve resort info. ${err}`))
 })
 
 app.post('/signup',(req, res)=>{
