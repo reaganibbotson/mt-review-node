@@ -51,7 +51,7 @@ app.get('/resorts/:region', (req, res)=>{
 
 app.get('/resort/:resort_name', (req, res)=>{
 	const { resort_name } = req.params;
-	db.select('*')
+	db.select()
 	.from('resorts')
 	.where('resort_name','=', resort_name)
 	.then(data=>res.status(200).json(data))
@@ -100,6 +100,7 @@ app.post('/login', (req, res)=>{
 })
 
 app.put('/leave-review', (req, res)=>{
+	console.log(req.body);
 	const { user_id, resort_id, total_score, powder_score, crowd_score, village_score, price_score } = req.body;
 	if(!user_id){
 		res.status(400).json('Must be signed in to leave review');
