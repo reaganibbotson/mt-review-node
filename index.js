@@ -105,13 +105,13 @@ app.put('/leave-review', (req, res)=>{
 		res.status(400).json('Must be signed in to leave review');
 	}else{
 		db.insert({
-			user_id: user_id,
-			resort_id: resort_id,
-			total_score: total_score,
-			powder_score: powder_score,
-			crowd_score: crowd_score,
-			village_score: village_score,
-			price_score:  price_score
+			'user_id': user_id,
+			'resort_id': resort_id,
+			'total_score': total_score,
+			'powder_score': powder_score,
+			'crowd_score': crowd_score,
+			'village_score': village_score,
+			'price_score':  price_score
 		}).into('reviews')
 		.then(res.status(200).json('Review submitted'))
 		.catch(res.status(400).json('Error submitting review'))
