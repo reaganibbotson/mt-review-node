@@ -6,18 +6,18 @@ const knex = require('knex');
 
 const db = knex({
   client: 'pg',
-  connection: {
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
-  }
-  	// connection: {
-  	// 	host: 'ec2-54-83-29-34.compute-1.amazonaws.com',
-  	// 	database: 'd75fsn04uibvce',
-  	// 	user:'yfgudxsuxjwxdm',
-  	// 	password:'3958146339deb45eaa7f4ba8a74983fd5a5d1ad2ee063b64c629546cc539dc1c',
-  	// 	ssl: true,
-  	// 	port: 5432
-  	// }
+  // connection: {
+  //   connectionString: process.env.DATABASE_URL,
+  //   ssl: true,
+  // }
+  	connection: {
+  		host: 'ec2-54-83-29-34.compute-1.amazonaws.com',
+  		database: 'd75fsn04uibvce',
+  		user:'yfgudxsuxjwxdm',
+  		password:'3958146339deb45eaa7f4ba8a74983fd5a5d1ad2ee063b64c629546cc539dc1c',
+  		ssl: true,
+  		port: 5432
+  	}
 });
 
 const app = express();
@@ -86,7 +86,7 @@ app.post('/login', (req, res)=>{
 		.then(data =>{
 			const validPassword = bcrypt.compareSync(password, data[0].hash);
 			if(validPassword){
-				return db.select('email', 'full_name', 'user_id').from('users').where('email','=', email)
+				return db.select('email', 'username', 'user_id').from('users').where('email','=', email)
 				.then(user=>{
 					res.json(user[0]);
 				})
@@ -100,18 +100,18 @@ app.post('/login', (req, res)=>{
 })
 
 app.put('/leave-review', (req, res)=>{
-	const { userID, resortID, overallRating, powderRating, crowdRating, villageRating, priceRating } = req.body;
-	if(!userID){
+	const { user_id, resort_id, total_score, powder_score, crowd_score, village_score, price_score } = req.body;
+	if(!user_id){
 		res.status(400).json('Must be signed in to leave review');
 	}else{
 		db.insert({
-			user_id: userID,
-			resort_id: resortID,
-			total_score: overallRating,
-			powder_score: powderRating,
-			crowd_score: crowdRating,
-			village_score: villageRating,
-			price_score:  priceRating
+			user_id: user_id,
+			resort_id: resort_id,
+			total_score: total_score,
+			powder_score: powder_score,
+			crowd_score: crowd_score,
+			village_score: village_score,
+			price_score:  price_score
 		}).into('reviews')
 		.then(res.status(200).json('Review submitted'))
 		.catch(res.status(400).json('Error submitting review'))
@@ -119,7 +119,7 @@ app.put('/leave-review', (req, res)=>{
 })
 
 app.post('/see-review', (req, res)=>{
-	const { resortID } = req.body;
+	const { resort_id } = req.body;
 	db.select(db.raw(`
 		resort_id,
 		avg(total_score) as total_score, 
@@ -128,7 +128,7 @@ app.post('/see-review', (req, res)=>{
 		avg(village_score) as village_score, 
 		avg(price_score) as price_score`))
 	.from('reviews')
-	.where('resort_id', '=', resortID)
+	.where('resort_id', '=', resort_id)
 	.groupBy('resort_id')
 	.returning('resort_id')
 	.then(data=>{
