@@ -131,7 +131,6 @@ app.post('/see-review', (req, res)=>{
 	.from('reviews')
 	.where('resort_id', '=', resort_id)
 	.groupBy('resort_id')
-	.returning('resort_id')
 	.then(data=>{
 		res.status(200).json(data[0]);
 	})
