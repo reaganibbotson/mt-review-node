@@ -49,11 +49,11 @@ app.get('/resorts/:region', (req, res)=>{
 	.catch(err=>res.status(400).json('Unable to retrieve resort list' + err));
 })
 
-app.get('/resort/:resort_name', (req, res)=>{
-	const { resort_name } = req.params;
+app.get('/resort/:resort_id', (req, res)=>{
+	const { resort_id } = req.params;
 	db.select()
 	.from('resorts')
-	.where('resort_name','=', resort_name)
+	.where('resort_id','=', resort_id)
 	.then(data=>res.status(200).json(data))
 	.catch(err=>res.status(400).json(`Unable to retrieve resort info. ${err}`))
 })
