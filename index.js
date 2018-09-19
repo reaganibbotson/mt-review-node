@@ -51,25 +51,26 @@ app.get('/resorts/:region', (req, res)=>{
 
 app.get('/resort/:resort_id', (req, res)=>{
 	const { resort_id } = req.params;
-	db.select('*')
-	.from('resorts')
-	.leftJoin(
-		db.select(db.raw(`
-			resort_id as,
-			avg(total_score) as total_score, 
-			avg(powder_score) as powder_score, 
-			avg(crowd_score) as crowd_score, 
-			avg(village_score) as village_score, 
-			avg(price_score) as price_score`))
-		.from('reviews')
-		.groupBy('resort_id'), 
-		'reviews.resort_id', 
-		'resorts.resort_id'
-	)
-	.where('resort_name','=', resort_name)
+	db.raw(`
+		SELECT *
+		FROM resorts res
+		left join (
+			select 
+				resort_id,
+				avg(total_score) as total_score, 
+				avg(powder_score) as powder_score, 
+				avg(crowd_score) as crowd_score, 
+				avg(village_score) as village_score, 
+				avg(price_score) as price_score
+			from reviews
+			group by resort_id
+		) rev
+		on res.resort_id = rev.resort_id
+		where res.resort_id = ${resort_id}
+	`)
 	.then(data=>{
 		console.log(data)
-		res.status(200).json(data)
+		res.status(200).json(data.rows[0])
 	})
 	.catch(err=>res.status(400).json(`Unable to retrieve resort info. ${err}`))
 })
