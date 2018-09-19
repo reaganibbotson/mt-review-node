@@ -116,7 +116,7 @@ app.post('/login', (req, res)=>{
 	}
 })
 
-app.put('/leave-review', (req, res)=>{
+app.put('/leavereview', (req, res)=>{
 	console.log(req.body);
 	const { user_id, resort_id, total_score, powder_score, crowd_score, village_score, price_score } = req.body;
 	if(!user_id){
@@ -134,25 +134,6 @@ app.put('/leave-review', (req, res)=>{
 		.then(res.status(200).json('Review submitted'))
 		.catch(res.status(400).json('Error submitting review'))
 	}
-})
-
-//Not in use
-app.post('/see-review', (req, res)=>{
-	const { resort_id } = req.body;
-	db.select(db.raw(`
-		resort_id,
-		avg(total_score) as total_score, 
-		avg(powder_score) as powder_score, 
-		avg(crowd_score) as crowd_score, 
-		avg(village_score) as village_score, 
-		avg(price_score) as price_score`))
-	.from('reviews')
-	.where('resort_id', '=', resort_id)
-	.groupBy('resort_id')
-	.then(data=>{
-		res.status(200).json(data[0]);
-	})
-	.catch(err=> res.status(400).json('Unable to retrieve reviews'));
 })
 
 app.listen(process.env.PORT || 3000, ()=>{
