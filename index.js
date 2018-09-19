@@ -34,7 +34,7 @@ app.get('/regions', (req, res)=>{
 		console.log(data);
 	})
 	.catch(err=> res.status(400).json('Couldn\'t load regions. Error:' + err));
-})
+});
 
 app.get('/resorts/:region', (req, res)=>{
 	const { region } = req.params;
@@ -47,7 +47,7 @@ app.get('/resorts/:region', (req, res)=>{
 		console.log(data);
 	})
 	.catch(err=>res.status(400).json('Unable to retrieve resort list' + err));
-})
+});
 
 app.get('/resort/:resort_id', (req, res)=>{
 	const { resort_id } = req.params;
@@ -73,7 +73,7 @@ app.get('/resort/:resort_id', (req, res)=>{
 		res.status(200).json(data.rows[0])
 	})
 	.catch(err=>res.status(400).json(`Unable to retrieve resort info. ${err}`))
-})
+});
 
 app.post('/signup',(req, res)=>{
 	const { email, username, password } = req.body;
@@ -91,7 +91,7 @@ app.post('/signup',(req, res)=>{
 		.then(user=> res.status(200).json(user[0]))
 		.catch(err=> res.status(400).json('Unable to signup, dickwit'))
 	}
-})
+});
 
 app.post('/login', (req, res)=>{
 	const { email, password } = req.body;
@@ -114,7 +114,7 @@ app.post('/login', (req, res)=>{
 		})
 		.catch(err=> res.status(400).json('Invalid credentials'))
 	}
-})
+});
 
 app.put('/leavereview', (req, res)=>{
 	console.log(req.body);
@@ -134,7 +134,7 @@ app.put('/leavereview', (req, res)=>{
 		.then(res.status(200).json('Review submitted'))
 		.catch(res.status(400).json('Error submitting review'))
 	}
-})
+});
 
 app.listen(process.env.PORT || 3000, ()=>{
 	console.log(`shitfuckball listening on ${process.env.PORT || 3000}`);
