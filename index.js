@@ -69,7 +69,7 @@ app.get('/resort/:resort_id', (req, res)=>{
 		where res.resort_id = ${resort_id}
 	`)
 	.then(data=>{
-		console.log(data)
+		console.log(data.rows[0])
 		res.status(200).json(data.rows[0])
 	})
 	.catch(err=>res.status(400).json(`Unable to retrieve resort info. ${err}`))
