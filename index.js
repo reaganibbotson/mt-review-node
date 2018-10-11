@@ -3,6 +3,15 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const knex = require('knex');
+const path = require('path');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+	destination: '/files',
+	filename: function(req, res, cq){
+		cq(null, `${Date.now()} ${path.extname(file.originalname)}`)
+	}
+})
 
 const db = knex({
   client: 'pg',
@@ -134,6 +143,11 @@ app.put('/leavereview', (req, res)=>{
 		.then(res.status(200).json('Review submitted'))
 		.catch(res.status(400).json('Error submitting review'))
 	}
+});
+
+app.post('/uploadFile', (req, res)=>{
+	console.log(req.body)
+	console.log(req.file.filename)
 });
 
 app.listen(process.env.PORT || 3000, ()=>{
