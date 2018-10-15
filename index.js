@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
 		cb(null, '/files')
 	},
 	filename: function(req, file, cb){
-		cb(null, `${file.originalname} - ${Date.now()}${path.extname(file.originalname)}`)
+		cb(null, `${file.originalname.split(".").slice(0, -1).join(".")} - ${Date.now()}${path.extname(file.originalname)}`)
 	}
 });
 
