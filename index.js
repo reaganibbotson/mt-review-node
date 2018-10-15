@@ -11,9 +11,10 @@ const storage = multer.diskStorage({
 		cb(null, '/files')
 	},
 	filename: function(req, file, cb){
-		cb(null, `${Date.now()} ${path.extname(file.originalname)}`)
+		cb(null, `${file.filename} - ${Date.now()}${path.extname(file.originalname)}`)
 	}
 });
+
 const upload = multer({storage: storage});
 
 const db = knex({
