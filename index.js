@@ -8,10 +8,11 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
 	destination: '/files',
-	filename: function(req, res, cq){
-		cq(null, `${Date.now()} ${path.extname(file.originalname)}`)
+	filename: function(req, res, cb){
+		cb(null, `${Date.now()} ${path.extname(file.originalname)}`)
 	}
 })
+const upload = multer({storage: storage});
 
 const db = knex({
   client: 'pg',
@@ -145,9 +146,14 @@ app.put('/leavereview', (req, res)=>{
 	}
 });
 
-app.post('/uploadFile', (req, res)=>{
-	console.log(req.body)
-	console.log(req.file.filename)
+app.post('/uploadFile', upload.single('file'), (req, res)=>{
+	if (!req.file) {
+		console.log('No file')
+		res.status(400).json('No file yo')
+	} else {
+		console.log('File uploaded')
+		res.status(200).json('File uploaded all g')
+	}
 });
 
 app.listen(process.env.PORT || 3000, ()=>{
