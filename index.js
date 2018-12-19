@@ -13,6 +13,8 @@ const storage = multer.diskStorage({
 	}
 })
 
+const upload = multer({ storage });
+
 const db = knex({
   client: 'pg',
   // connection: {
@@ -85,6 +87,7 @@ app.get('/resort/:resort_id', (req, res)=>{
 });
 
 app.post('/signup',(req, res)=>{
+	console.log(req.body);
 	const { email, username, password } = req.body;
 	if(!email || !username || !password){
 		res.status(400).json('Incorrect form data');
@@ -145,9 +148,11 @@ app.put('/leavereview', (req, res)=>{
 	}
 });
 
-app.post('/uploadFile', (req, res)=>{
-	console.log(req.body)
-	console.log(req.file.filename)
+app.post('/uploadFile', upload.single('file'), (req, res)=>{
+	const file = req.file
+	const body = req.body
+	console.log('File = ' + file)
+	console.log('Body = ' + body)
 });
 
 app.listen(process.env.PORT || 3000, ()=>{
