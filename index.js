@@ -8,10 +8,11 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
 	destination: '/files',
-	filename: function(req, res, cq){
-		cq(null, `${Date.now()} ${path.extname(file.originalname)}`)
+	filename: function(req, res, cb){
+		cb(null, `${Date.now()} ${path.extname(file.originalname)}`)
 	}
 })
+const upload = multer({storage: storage});
 
 const upload = multer({ storage });
 
@@ -153,6 +154,13 @@ app.post('/uploadFile', upload.single('file'), (req, res)=>{
 	const body = req.body
 	console.log('File = ' + file)
 	console.log('Body = ' + body)
+	if (!req.file) {
+		console.log('No file')
+		res.status(400).json('No file yo')
+	} else {
+		console.log('File uploaded')
+		res.status(200).json('File uploaded all g')
+	}
 });
 
 app.listen(process.env.PORT || 3000, ()=>{
