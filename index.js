@@ -6,6 +6,7 @@ const knex = require('knex');
 const path = require('path');
 const multer = require('multer');
 
+//doesn't work
 const storage = multer.diskStorage({
 	destination: '/files',
 	filename: function(req, res, cb){
