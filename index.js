@@ -89,6 +89,7 @@ app.get('/resort/:resort_id', (req, res)=>{
 });
 
 app.post('/signup',(req, res)=>{
+	console.log(req.body);
 	const { email, username, password } = req.body;
 	if(!email || !username || !password){
 		res.status(400).json('Incorrect form data');
