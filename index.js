@@ -5,17 +5,31 @@ const cors = require('cors');
 const knex = require('knex');
 const path = require('path');
 const multer = require('multer');
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk');
 
-//doesn't work
-const storage = multer.diskStorage({
-	destination: '/files',
-	filename: function(req, res, cb){
-		cb(null, `${Date.now()} ${path.extname(file.originalname)}`)
-	}
+aws.config.update({
+	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+	accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+	region: 'ap-southeast-2'
 })
-const upload = multer({storage: storage});
 
-const upload = multer({ storage });
+const s3 = new aws.S3();
+
+const upload = multer({
+	storage: multerS3({
+		s3: s3,
+		bucket: 'mtreviewimages',
+		metadata: function(req, res, cb){
+			cb(null, {fieldName: file.fieldname});
+		},
+		key: function(req, file, cb) {
+			cb(null, `${file.originalname} - ${Date.now().toString()}`)
+		}
+	})
+})
+
+const singleUpload = upload.single('image');
 
 const db = knex({
   client: 'pg',
@@ -150,19 +164,33 @@ app.put('/leavereview', (req, res)=>{
 	}
 });
 
-app.post('/uploadFile', upload.single('file'), (req, res)=>{
-	const file = req.file
-	const body = req.body
-	console.log('File = ' + file)
-	console.log('Body = ' + body)
-	if (!req.file) {
-		console.log('No file')
-		res.status(400).json('No file yo')
-	} else {
-		console.log('File uploaded')
-		res.status(200).json('File uploaded all g')
-	}
-});
+// app.post('/uploadFile', upload.single('file'), (req, res)=>{
+// 	const file = req.file
+// 	const body = req.body
+// 	console.log('File = ' + file)
+// 	console.log('Body = ' + body)
+// 	if (!req.file) {
+// 		console.log('No file')
+// 		res.status(400).json('No file yo')
+// 	} else {
+// 		console.log('File uploaded')
+// 		res.status(200).json('File uploaded all g')
+// 	}
+// });
+
+app.post('/uploadFile', (req, res)=>{
+	singleUpload(req, res, (err, some) {
+		if (err) {
+			return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}] });
+		} else {
+			db.raw(`
+				update resorts
+				set resort_image = ${req.file.location}
+				where resort_id = ${req.file.resort_id}
+			`)
+		}
+	})
+})
 
 app.listen(process.env.PORT || 3000, ()=>{
 	console.log(`shitfuckball listening on ${process.env.PORT || 3000}`);
