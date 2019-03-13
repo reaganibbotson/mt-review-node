@@ -168,7 +168,7 @@ app.put('/leavereview', (req, res)=>{
 app.post('/uploadFile', upload.array('upl',1), (req, res, next) =>{
 	console.log(res);
 	res.send('Successful upload');
-};
+});
 
 
 app.listen(process.env.PORT || 3000, ()=>{
