@@ -8,6 +8,7 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
 
+
 aws.config.update({
 	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 	accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -29,7 +30,6 @@ const upload = multer({
 	})
 })
 
-const singleUpload = upload.single('image');
 
 const db = knex({
   client: 'pg',
@@ -164,33 +164,12 @@ app.put('/leavereview', (req, res)=>{
 	}
 });
 
-// app.post('/uploadFile', upload.single('file'), (req, res)=>{
-// 	const file = req.file
-// 	const body = req.body
-// 	console.log('File = ' + file)
-// 	console.log('Body = ' + body)
-// 	if (!req.file) {
-// 		console.log('No file')
-// 		res.status(400).json('No file yo')
-// 	} else {
-// 		console.log('File uploaded')
-// 		res.status(200).json('File uploaded all g')
-// 	}
-// });
 
-app.post('/uploadFile', (req, res)=>{
-	singleUpload(req, res, (err, some) {
-		if (err) {
-			return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}] });
-		} else {
-			db.raw(`
-				update resorts
-				set resort_image = ${req.file.location}
-				where resort_id = ${req.file.resort_id}
-			`)
-		}
-	})
-})
+app.post('/uploadFile', upload.array('upl',1), (req, res, next) =>{
+	console.log(res);
+	res.send('Successful upload');
+};
+
 
 app.listen(process.env.PORT || 3000, ()=>{
 	console.log(`shitfuckball listening on ${process.env.PORT || 3000}`);
