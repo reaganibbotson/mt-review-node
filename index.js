@@ -18,18 +18,10 @@ const upload = multer({ storage });
 
 const db = knex({
   client: 'pg',
-  // connection: {
-  //   connectionString: process.env.DATABASE_URL,
-  //   ssl: true,
-  // }
-  	connection: {
-  		host: 'ec2-54-83-29-34.compute-1.amazonaws.com',
-  		database: 'd75fsn04uibvce',
-  		user:'yfgudxsuxjwxdm',
-  		password:'3958146339deb45eaa7f4ba8a74983fd5a5d1ad2ee063b64c629546cc539dc1c',
-  		ssl: true,
-  		port: 5432
-  	}
+  connection: {
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+  }
 });
 
 const app = express();
